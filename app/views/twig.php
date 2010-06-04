@@ -1,7 +1,7 @@
 <?php
 
 App::import('vendor', 'Twig',
-		array('file' => 'Twig' . DS . 'Autoloader.php'));
+		array('file' => 'Twig' . DS . 'lib'. DS . 'Twig' . DS . 'Autoloader.php'));
 
 class TwigView extends View
 {
@@ -30,7 +30,7 @@ class TwigView extends View
 
 		$this->ext = '.htm';
 
-		$this->twig->addExtension(new Twig_Extension_Project());
+		//$this->twig->addExtension(new Twig_Extension_Project());
 	}
 
 	/**
