@@ -2,4 +2,15 @@
 .idea
 nbproject
 
-#
+# CakePHP files (excluding: twig view class, twig cached templates folder, Twig files)
+*
+!app/tmp/cache/twig/empty
+
+*
+!app/views/twig.php
+
+*
+!vendors/*
+
+
+
