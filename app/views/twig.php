@@ -25,6 +25,7 @@ class TwigView extends View
 
 		$this->twig = new Twig_Environment($loader, array(
 			'cache' => $cacheDir,
+            'strict_variables' => false,
 			'debug' => $debugMode
 		));
 
@@ -44,8 +45,13 @@ class TwigView extends View
 	 * @return string Rendered output
 	 * @access protected
 	 */
-	function _render($___viewFn, $___dataForView, $loadHelpers = true, $cached = false) {
-		$loadedHelpers = array();
+	function _render($___viewFn, $___dataForView, $loadHelpers = true, $cached = false)
+    {
+        if(pathinfo($___viewFn, PATHINFO_EXTENSION) == 'ctp') {
+            return parent::_render($___viewFn, $___dataForView, $loadHelpers, $cached);
+        }
+        
+        $loadedHelpers = array();
 
 		if ($this->helpers != false && $loadHelpers === true) {
 			$loadedHelpers = $this->_loadHelpers($loadedHelpers, $this->helpers);
@@ -68,6 +74,10 @@ class TwigView extends View
 		}
 
 		$___dataForView['view'] =& $this;
+        /*unset($___dataForView['form']);
+        unset($___dataForView['html']);
+        unset($___dataForView['session']);
+        pr($___dataForView);*/
 
 		ob_start();
 
@@ -105,5 +115,88 @@ class TwigView extends View
 		}
 
 		return $out;
+	}
+
+    /**
+ * Renders a piece of PHP with provided parameters and returns HTML, XML, or any other string.
+ *
+ * This realizes the concept of Elements, (or "partial layouts")
+ * and the $params array is used to send data to be used in the
+ * Element.  Elements can be cached through use of the cache key.
+ *
+ * ### Special params
+ *
+ * - `cache` - enable caching for this element accepts boolean or strtotime compatible string.
+ *   Can also be an array. If `cache` is an array,
+ *   `time` is used to specify duration of cache.
+ *   `key` can be used to create unique cache files.
+ * - `plugin` - Load an element from a specific plugin.
+ *
+ * @param string $name Name of template file in the/app/views/elements/ folder
+ * @param array $params Array of data to be made available to the for rendered
+ *    view (i.e. the Element)
+ * @return string Rendered Element
+ * @access public
+ */
+	function element($name, $params = array(), $loadHelpers = false) {
+		$file = $plugin = $key = null;
+
+		if (isset($params['plugin'])) {
+			$plugin = $params['plugin'];
+		}
+
+		if (isset($this->plugin) && !$plugin) {
+			$plugin = $this->plugin;
+		}
+
+		if (isset($params['cache'])) {
+			$expires = '+1 day';
+
+			if (is_array($params['cache'])) {
+				$expires = $params['cache']['time'];
+				$key = Inflector::slug($params['cache']['key']);
+			} elseif ($params['cache'] !== true) {
+				$expires = $params['cache'];
+				$key = implode('_', array_keys($params));
+			}
+
+			if ($expires) {
+				$cacheFile = 'element_' . $key . '_' . $plugin . Inflector::slug($name);
+				$cache = cache('views' . DS . $cacheFile, null, $expires);
+
+				if (is_string($cache)) {
+					return $cache;
+				}
+			}
+		}
+		$paths = $this->_paths($plugin);
+
+        $exts = array($this->ext);
+		if ($this->ext !== '.ctp') {
+			array_push($exts, '.ctp');
+		}
+
+		foreach ($exts as $ext) {
+			foreach ($paths as $path) {
+                if (file_exists($path . 'elements' . DS . $name . $ext)) {
+                    $file = $path . 'elements' . DS . $name . $ext;
+                    break 2;
+                }
+			}
+		}
+
+		if (is_file($file)) {
+			$params = array_merge_recursive($params, $this->loaded);
+			$element = $this->_render($file, array_merge($this->viewVars, $params), $loadHelpers);
+			if (isset($params['cache']) && isset($cacheFile) && isset($expires)) {
+				cache('views' . DS . $cacheFile, $element, $expires);
+			}
+			return $element;
+		}
+		$file = $paths[0] . 'elements' . DS . $name . $this->ext;
+
+		if (Configure::read() > 0) {
+			return "Not Found: " . $file;
+		}
 	}
 }
