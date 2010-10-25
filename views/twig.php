@@ -35,15 +35,7 @@ class TwigView extends View
 	}
 
 	/**
-	 * Renders and returns output for given view filename with its
-	 * array of data.
-	 *
-	 * @param string $___viewFn Filename of the view
-	 * @param array $___dataForView Data to include in rendered view
-	 * @param boolean $loadHelpers Boolean to indicate that helpers should be loaded.
-	 * @param boolean $cached Whether or not to trigger the creation of a cache file.
-	 * @return string Rendered output
-	 * @access protected
+	 * Renders and returns output for given view filename with its array of data.
 	 */
 	function _render($___viewFn, $___dataForView, $loadHelpers = true, $cached = false)
     {
@@ -73,27 +65,17 @@ class TwigView extends View
 			unset($name, $loadedHelpers, $helpers, $i, $helperNames, $helper);
 		}
 
-		$___dataForView['view'] =& $this;
-        /*unset($___dataForView['form']);
-        unset($___dataForView['html']);
-        unset($___dataForView['session']);
-        pr($___dataForView);*/
+		$___dataForView['view'] = $___dataForView['this'] = $this;
 
 		ob_start();
+		readfile($___viewFn);
 
-		if (Configure::read() > 0) {
-			include ($___viewFn);
-		} else {
-			@include ($___viewFn);
-		}
+        $template = $this->twig->loadTemplate(ob_get_clean());
+        $out = $template->render($___dataForView);
 
-		if ($loadHelpers === true) {
-			$this->_triggerHelpers('afterRender');
-		}
-
-		$template = $this->twig->loadTemplate(ob_get_clean());
-		$out = $template->render($___dataForView);
-		//$out = ob_get_clean();
+        if ($loadHelpers === true) {
+            $this->_triggerHelpers('afterRender');
+        }
 
 		$caching = (
 			isset($this->loaded['cache']) &&
