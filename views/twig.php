@@ -52,14 +52,13 @@ class TwigView extends View
 
 			for ($i = count($helpers) - 1; $i >= 0; $i--) {
 				$name = $helperNames[$i];
-				$helper =& $loadedHelpers[$helpers[$i]];
+				$helper = $loadedHelpers[$helpers[$i]];
 
 				if (!isset($___dataForView[$name])) {
-					//${$name} =& $helper;
-					$___dataForView[$name] =& $helper;
+					$___dataForView[$name] = $helper;
 				}
-				$this->loaded[$helperNames[$i]] =& $helper;
-				$this->{$helpers[$i]} =& $helper;
+				$this->loaded[$helperNames[$i]] = $helper;
+				$this->{$helpers[$i]} = $helper;
 			}
 			$this->_triggerHelpers('beforeRender');
 			unset($name, $loadedHelpers, $helpers, $i, $helperNames, $helper);
@@ -84,7 +83,7 @@ class TwigView extends View
 
 		if ($caching) {
 			if (is_a($this->loaded['cache'], 'CacheHelper')) {
-				$cache =& $this->loaded['cache'];
+				$cache = $this->loaded['cache'];
 				$cache->base = $this->base;
 				$cache->here = $this->here;
 				$cache->helpers = $this->helpers;
@@ -99,26 +98,8 @@ class TwigView extends View
 		return $out;
 	}
 
-    /**
- * Renders a piece of PHP with provided parameters and returns HTML, XML, or any other string.
- *
- * This realizes the concept of Elements, (or "partial layouts")
- * and the $params array is used to send data to be used in the
- * Element.  Elements can be cached through use of the cache key.
- *
- * ### Special params
- *
- * - `cache` - enable caching for this element accepts boolean or strtotime compatible string.
- *   Can also be an array. If `cache` is an array,
- *   `time` is used to specify duration of cache.
- *   `key` can be used to create unique cache files.
- * - `plugin` - Load an element from a specific plugin.
- *
- * @param string $name Name of template file in the/app/views/elements/ folder
- * @param array $params Array of data to be made available to the for rendered
- *    view (i.e. the Element)
- * @return string Rendered Element
- * @access public
+ /**
+ * Renders a piece of PHP with provided parameters and returns HTML, XML, or any other string. *
  */
 	function element($name, $params = array(), $loadHelpers = false) {
 		$file = $plugin = $key = null;
