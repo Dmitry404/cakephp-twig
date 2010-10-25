@@ -3,6 +3,13 @@
 App::import('vendor', 'TwigView.Twig',
 		array('file' => 'Twig' . DS . 'lib'. DS . 'Twig' . DS . 'Autoloader.php'));
 
+// Twig_Autoloader must be registered before loading your extensions
+Twig_Autoloader::register();
+
+// Include user's Twig extensions
+App::import('lib', 'TwigView.Text');
+App::import('lib', 'TwigView.SpecificToProject');
+
 class TwigView extends View
 {
 	/**
@@ -13,26 +20,25 @@ class TwigView extends View
 	private $twig = null;
 
 	public function  __construct($controller)
-	{
-		parent::__construct($controller);
+    {
+        parent::__construct($controller);
 
-		Twig_Autoloader::register();
+        $cacheDir = APP . 'plugins' . DS . 'twig_view' . DS . 'tmp';
+        $debugMode = (bool)Configure::read('debug');
 
-		$loader = new Twig_Loader_String();
-
-		$cacheDir = APP . 'plugins' . DS . 'twig_view' . DS . 'tmp';
-		$debugMode = (bool)Configure::read('debug');
-
-		$this->twig = new Twig_Environment($loader, array(
-			'cache' => $cacheDir,
+        $loader = new Twig_Loader_String();
+        $this->twig = new Twig_Environment($loader, array(
+            'cache' => $cacheDir,
             'strict_variables' => false,
-			'debug' => $debugMode
-		));
+            'debug' => $debugMode
+        ));
 
-		$this->ext = '.htm';
+        $this->ext = '.htm';
 
-		//$this->twig->addExtension(new Twig_Extension_Project());
-	}
+        // Load user's Twig extensions
+        $this->twig->addExtension(new Twig_Extensions_Extension_Text());
+        $this->twig->addExtension(new Twig_Extension_SpecificToProject());
+    }
 
 	/**
 	 * Renders and returns output for given view filename with its array of data.
