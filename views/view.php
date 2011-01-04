@@ -1,16 +1,16 @@
 <?php
 
-App::import('vendor', 'TwigView.Twig',
+App::import('vendor', 'cakephp-twig.Autoloader',
 		array('file' => 'Twig' . DS . 'lib'. DS . 'Twig' . DS . 'Autoloader.php'));
 
 // Twig_Autoloader must be registered before loading your extensions
 Twig_Autoloader::register();
 
 // Include user's Twig extensions
-App::import('lib', 'TwigView.Text');
-App::import('lib', 'TwigView.SpecificToProject');
+App::import('lib', 'cakephp-twig.Text');
+App::import('lib', 'cakephp-twig.SpecificToProject');
 
-class TwigView extends View
+class ViewView extends View
 {
 	/**
 	 * Twig environment object
