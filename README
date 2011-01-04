@@ -4,6 +4,7 @@ CakePHP view class for the Twig template engine
 - Twig, the flexible, fast, and secure template language for PHP http://www.twig-project.org/
 
 =========================== How to install =================================================
+
 1. Clone this repository to your plugins directory (default app/plugins)
     $ cd app/plugins && git clone git://github.com/Dmitry404/cakephp-twig.git
 
@@ -13,7 +14,8 @@ CakePHP view class for the Twig template engine
 3. Make folder for cached templates as writable
 
 4. Add to your AppController this property
-    public $view = 'cakephp-twig.View';
+    public $view = 'cakephp-twig.TwigView';
 
 5. Create your views with .htm (by default) extension
+
 ============================================================================================

@@ -11,7 +11,7 @@ App::import('lib', 'cakephp-twig.Text');
 App::import('lib', 'cakephp-twig.Debug');
 App::import('lib', 'cakephp-twig.SpecificToProject');
 
-class ViewView extends View
+class TwigView extends View
 {
 	/**
 	 * Twig environment object
