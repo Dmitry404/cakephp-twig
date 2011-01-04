@@ -30,6 +30,7 @@ class ViewView extends View
         $this->twig = new Twig_Environment($loader, array(
             'cache' => $cacheDir,
             'strict_variables' => false,
+            'autoescape' => false,
             'debug' => $debugMode
         ));
 
