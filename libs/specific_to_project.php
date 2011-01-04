@@ -13,7 +13,6 @@ class Twig_Extension_SpecificToProject extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'var_dump' => new Twig_Filter_Function('var_dump'),
             'nothing' => new Twig_Filter_Method($this, 'nothing_filter'),);
     }
 
@@ -33,6 +32,6 @@ class Twig_Extension_SpecificToProject extends Twig_Extension
      */
     public function nothing_filter()
     {
-        return 'nothing';
+        return null;
     }
 }

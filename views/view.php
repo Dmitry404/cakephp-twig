@@ -8,6 +8,7 @@ Twig_Autoloader::register();
 
 // Include user's Twig extensions
 App::import('lib', 'cakephp-twig.Text');
+App::import('lib', 'cakephp-twig.Debug');
 App::import('lib', 'cakephp-twig.SpecificToProject');
 
 class ViewView extends View
@@ -38,6 +39,7 @@ class ViewView extends View
 
         // Load user's Twig extensions
         $this->twig->addExtension(new Twig_Extensions_Extension_Text());
+        $this->twig->addExtension(new Twig_Extension_Debug());
         $this->twig->addExtension(new Twig_Extension_SpecificToProject());
     }
 
