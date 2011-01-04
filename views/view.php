@@ -23,7 +23,7 @@ class ViewView extends View
     {
         parent::__construct($controller);
 
-        $cacheDir = APP . 'plugins' . DS . 'twig_view' . DS . 'tmp';
+        $cacheDir = realpath(dirname(__FILE__) . '/../') . DS . 'tmp';
         $debugMode = (bool)Configure::read('debug');
 
         $loader = new Twig_Loader_String();
