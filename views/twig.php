@@ -1,11 +1,4 @@
 <?php
-
-App::import('vendor', 'cakephp-twig.Autoloader',
-		array('file' => 'Twig' . DS . 'lib'. DS . 'Twig' . DS . 'Autoloader.php'));
-
-// Twig_Autoloader must be registered before loading your extensions
-Twig_Autoloader::register();
-
 class TwigView extends View
 {
 	/**
