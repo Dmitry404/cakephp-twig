@@ -28,7 +28,7 @@ $ chmod 777 app/plugins/cakephp-twig/tmp
 * Add to your AppController this property
 
 ```php
-public $view = 'cakephp-twig.TwigView';
+public $view = 'cakephp-twig.Twig';
 ```
 
 * Create your views with .htm (by default) extension
