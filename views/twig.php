@@ -6,11 +6,6 @@ App::import('vendor', 'cakephp-twig.Autoloader',
 // Twig_Autoloader must be registered before loading your extensions
 Twig_Autoloader::register();
 
-// Include user's Twig extensions
-App::import('lib', 'cakephp-twig.Text');
-App::import('lib', 'cakephp-twig.Debug');
-App::import('lib', 'cakephp-twig.SpecificToProject');
-
 class TwigView extends View
 {
 	/**
@@ -36,11 +31,6 @@ class TwigView extends View
         ));
 
         $this->ext = '.htm';
-
-        // Load user's Twig extensions
-        $this->twig->addExtension(new Twig_Extensions_Extension_Text());
-        $this->twig->addExtension(new Twig_Extension_Debug());
-        $this->twig->addExtension(new Twig_Extension_SpecificToProject());
     }
 
 	/**
