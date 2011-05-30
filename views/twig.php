@@ -41,7 +41,7 @@ class TwigView extends View
     {
         $pathToBootstrapClass = APP . 'libs' . DS . 'CakePhpTwig' . DS . 'bootstrap.php';
         if (file_exists($pathToBootstrapClass)) {
-            require $pathToBootstrapClass;
+            require_once $pathToBootstrapClass;
 
             return true;
         }
