@@ -31,4 +31,11 @@ $ chmod 777 app/plugins/cakephp-twig/tmp
 public $view = 'cakephp-twig.Twig';
 ```
 
+* Add this code to your bootstrap.php
+
+```php
+App::import('lib', 'cakephp-twig.autoloader');
+CakePhpTwig_Autoloader::register();
+```
+
 * Create your views with .htm (by default) extension
