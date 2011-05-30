@@ -15,15 +15,38 @@ class TwigView extends View
         $cacheDir = realpath(dirname(__FILE__) . '/../') . DS . 'tmp';
         $debugMode = (bool)Configure::read('debug');
 
-        $loader = new Twig_Loader_String();
-        $this->twig = new Twig_Environment($loader, array(
+        $defaultOptions = array(
             'cache' => $cacheDir,
             'strict_variables' => false,
             'autoescape' => false,
-            'debug' => $debugMode
-        ));
+            'debug' => $debugMode,
+        );
+
+        $isBootstrapClassLoaded = $this->_loadBootstrapClass();
+        if ($isBootstrapClassLoaded) {
+            CakePhpTwig_Bootstrap::bootstrapLoader($defaultOptions);
+        }
+
+        $loader = new Twig_Loader_String();
+        $this->twig = new Twig_Environment($loader, $defaultOptions);
 
         $this->ext = '.htm';
+
+        if ($isBootstrapClassLoaded) {
+            CakePhpTwig_Bootstrap::bootstrapEnvironment($this->twig);
+        }
+    }
+
+    private function _loadBootstrapClass()
+    {
+        $pathToBootstrapClass = APP . 'libs' . DS . 'CakePhpTwig' . DS . 'bootstrap.php';
+        if (file_exists($pathToBootstrapClass)) {
+            require $pathToBootstrapClass;
+
+            return true;
+        }
+
+        return false;
     }
 
 	/**
