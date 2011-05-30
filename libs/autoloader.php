@@ -14,7 +14,7 @@ class CakePhpTwig_Autoloader
             App::import('vendor', 'cakephp-twig.Autoloader',
                         array('file' => 'Twig' . DS . 'lib'. DS . 'Twig' . DS . 'Autoloader.php'));
         } else {
-            App::import('vendor', 'TwigAutoloader', array('file' => $pathToTwigLibs));
+            require $pathToTwigLibs;
         }
 
         Twig_Autoloader::register();
