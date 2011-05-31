@@ -6,6 +6,8 @@ class CakePhpTwig_Autoloader
         spl_autoload_register(array(new self, 'autoload'));
 
         self::registerTwigAutoloader($pathToTwigLibs);
+
+        require_once 'bootstrapable.php';
     }
 
     static public function registerTwigAutoloader($pathToTwigLibs = null)
@@ -22,13 +24,17 @@ class CakePhpTwig_Autoloader
 
     static public function autoload($class)
     {
-        if (0 !== strpos($class, 'Twig')) {
+        if (0 === strpos($class, 'Twig')) {
+            $file = str_replace('_', '/', $class) . '.php';
+        } elseif ($class == 'CakePhpTwig_Bootstrap') {
+            $file = 'bootstrap.php';
+        } else {
             return;
         }
 
         $userLibsDir = APP . "libs" . DS . "CakePhpTwig" . DS;
-        if (file_exists($file = $userLibsDir . str_replace('_', '/', $class) . '.php')) {
-            require $file;
+        if (file_exists($userLibsDir . $file)) {
+            require $userLibsDir . $file;
         }
     }
 }

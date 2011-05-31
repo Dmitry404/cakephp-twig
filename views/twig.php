@@ -22,9 +22,10 @@ class TwigView extends View
             'debug' => $debugMode,
         );
 
-        $isBootstrapClassLoaded = $this->_loadBootstrapClass();
-        if ($isBootstrapClassLoaded) {
-            CakePhpTwig_Bootstrap::bootstrapLoader($defaultOptions);
+        $isBootstrapClassExists = (class_exists('CakePhpTwig_Bootstrap') && new CakePhpTwig_Bootstrap instanceof CakePhpTwig_Bootstrapable);
+
+        if ($isBootstrapClassExists) {
+            CakePhpTwig_Bootstrap::bootstrapOptions($defaultOptions);
         }
 
         $loader = new Twig_Loader_String();
@@ -32,24 +33,12 @@ class TwigView extends View
 
         $this->ext = '.htm';
 
-        if ($isBootstrapClassLoaded) {
+        if ($isBootstrapClassExists) {
             CakePhpTwig_Bootstrap::bootstrapEnvironment($this->twig);
         }
     }
 
-    private function _loadBootstrapClass()
-    {
-        $pathToBootstrapClass = APP . 'libs' . DS . 'CakePhpTwig' . DS . 'bootstrap.php';
-        if (file_exists($pathToBootstrapClass)) {
-            require_once $pathToBootstrapClass;
-
-            return true;
-        }
-
-        return false;
-    }
-
-	/**
+    /**
 	 * Renders and returns output for given view filename with its array of data.
 	 */
 	function _render($___viewFn, $___dataForView, $loadHelpers = true, $cached = false)
